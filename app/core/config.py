@@ -1,7 +1,8 @@
-from pydantic_settings import BaseSettings, SettingsConfigDict
-from pydantic.types import SecretStr
-from pydantic import Field
 from pathlib import Path
+
+from pydantic import Field
+from pydantic.types import SecretStr
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 ENV_FILE = Path(__file__).parent.parent.parent.parent.parent / ".env"
 
@@ -19,6 +20,11 @@ class Config(BaseSettings):
     postgres_port: int = Field(validation_alias='POSTGRES_PORT')
     postgres_db_name: str = Field(validation_alias='POSTGRES_AUTH_DB')
 
+    keitaro_api_url: str = Field(
+        default="https://your-keitaro-domain.com/admin_api/v1",
+        validation_alias="KEITARO_API_URL",
+    )
+    keitaro_api_key: SecretStr = Field(validation_alias="KEITARO_API_KEY")
 
     @property
     def db_async_url(self) -> str:
