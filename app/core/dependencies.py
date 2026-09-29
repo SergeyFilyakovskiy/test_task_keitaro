@@ -11,9 +11,11 @@ async def get_db_session() -> AsyncIterator[AsyncSession]:
         try:
             yield session
             await session.commit()
-        except Exception:
+        except Exception as e:
             await session.rollback()
-            raise
+            raise e
+        finally:
+            await session.aclose()
 
 
 def get_keitaro() -> KeitaroClient:
