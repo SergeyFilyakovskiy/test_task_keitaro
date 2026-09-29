@@ -1,12 +1,10 @@
 from logging.config import fileConfig
 
-from sqlalchemy import engine_from_config
-from sqlalchemy import pool
-
 from alembic import context
-from app.infrastructure.db.models import Flow, FlowOffer, Campaign #noqa
-from app.infrastructure.db.models import Base
+from sqlalchemy import engine_from_config, pool
+
 from app.core.config import settings
+from app.infrastructure.db.models import Base, Campaign, Flow, FlowOffer  #noqa
 
 config = context.config
 
