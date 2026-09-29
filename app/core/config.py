@@ -4,7 +4,7 @@ from pydantic import Field
 from pydantic.types import SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-ENV_FILE = Path(__file__).parent.parent.parent.parent.parent / ".env"
+ENV_FILE = Path(__file__).parent.parent.parent / ".env"
 
 class Config(BaseSettings):
 
@@ -18,7 +18,7 @@ class Config(BaseSettings):
     postgres_password: SecretStr = Field(validation_alias='POSTGRES_PASSWORD')
     postgres_host: str = Field(validation_alias='POSTGRES_HOST')
     postgres_port: int = Field(validation_alias='POSTGRES_PORT')
-    postgres_db_name: str = Field(validation_alias='POSTGRES_AUTH_DB')
+    postgres_db_name: str = Field(validation_alias='POSTGRES_DB')
 
     keitaro_api_url: str = Field(
         default="https://your-keitaro-domain.com/admin_api/v1",
@@ -26,6 +26,17 @@ class Config(BaseSettings):
     )
     keitaro_api_key: SecretStr = Field(validation_alias="KEITARO_API_KEY")
 
+    keitaro_default_domain_id: int | None = Field(
+        default=None, validation_alias="KEITARO_DEFAULT_DOMAIN_ID"
+    )
+    keitaro_default_group_name: str = Field(
+        default="FORTESTS", validation_alias="KEITARO_DEFAULT_GROUP_NAME"
+    )
+    keitaro_default_source_name: str = Field(
+        default="FORTESTS", validation_alias="KEITARO_DEFAULT_SOURCE_NAME"
+    )
+
+    
     @property
     def db_async_url(self) -> str:
         return (

@@ -86,6 +86,10 @@ class Campaign(Base):
     def __repr__(self) -> str:
         return f"<Campaign(id={self.id}, name={self.name!r})>"
 
+    @property
+    def is_dirty(self) -> bool:
+        return any(not flow.is_synced for flow in self.flows)
+
 
 class Flow(Base):
     __tablename__ = "flows"
@@ -139,10 +143,6 @@ class Flow(Base):
         nullable=True
         )  # снапшот фильтров из Keitaro
 
-    # Снапшот последнего синка с Keitaro. Нужен для:
-    #   - cancel (откат к снапшоту)
-    #   - определения "жёлтого" состояния (current != snapshot)
-    # Храним полный снимок offers: [{offer_id, share, pinned, is_active, ...}]
     last_synced_snapshot: Mapped[Optional[dict]] = mapped_column(
         JSON, 
         nullable=True
