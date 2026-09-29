@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<div id="global-error" class="hidden mb-4 rounded border border-red-400 bg-red-100 text-red-800 px-4 py-2"></div>
+
+<div class="flex items-center justify-between mb-6">
+  <h1 class="text-2xl font-bold">
+    <a href="/" class="text-gray-400 hover:text-gray-600">←</a>
+    Кампания: <span id="camp-name"></span>
+  </h1>
+  <button id="btn-fetch" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
+    Fetch streams from KT
+  </button>
+</div>
+
+<div id="flows" class="space-y-4"></div>
+{% endblock %}
+
+{% block scripts %}
+<script>const CAMPAIGN_ID = {{ campaign_id }};</script>
+<script src="/static/js/campaign.js"></script>
+{% endblock %}
