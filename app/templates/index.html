@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+<div id="global-error" class="hidden mb-4 rounded border border-red-400 bg-red-100 text-red-800 px-4 py-2"></div>
+
+<div class="flex items-center justify-between mb-6">
+  <h1 class="text-2xl font-bold">Кампании</h1>
+  <button id="btn-new" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">New campaign</button>
+</div>
+
+<div id="create-panel" class="hidden mb-6 bg-white border rounded p-4 space-y-3">
+  <div class="grid grid-cols-3 gap-3">
+    <label class="block text-sm">Name
+      <input id="f-name" class="mt-1 w-full border rounded px-2 py-1" placeholder="имя кампании">
+    </label>
+    <label class="block text-sm">Geo
+      <input id="f-geo" class="mt-1 w-full border rounded px-2 py-1" placeholder="MX,AU,RO">
+    </label>
+    <label class="block text-sm">Offer
+      <input id="f-offer" class="mt-1 w-full border rounded px-2 py-1" placeholder="поиск по офферам...">
+    </label>
+  </div>
+  <button id="btn-create" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded w-full">Create</button>
+</div>
+
+<div id="campaigns" class="bg-white border rounded divide-y"></div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/index.js"></script>
+{% endblock %}

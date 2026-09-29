@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}test_task_keitaro{% endblock %}</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+  <link rel="stylesheet" href="/static/css/app.css">
+</head>
+<body class="bg-gray-100 text-gray-900">
+<nav class="bg-gray-900 text-white px-6 py-3 flex items-center justify-between">
+  <a href="/" class="font-semibold">Keitaro Wrapper</a>
+  <a href="/api/docs" class="text-sm text-gray-300 hover:text-white">API docs</a>
+</nav>
+<main class="max-w-5xl mx-auto p-6">
+  {% block content %}{% endblock %}
+</main>
+<script src="/static/js/api.js"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,8 @@
+/* "Жёлтый" поток: есть незапушенные изменения */
+.flow-dirty { background-color: #fef9c3; border-color: #ca8a04 !important; }
+
+/* Серый офер: удалён в Keitaro */
+.offer-grey { opacity: .55; background-color: #f3f4f6; }
+
+/* Локально удалённый офер (история, bring back) */
+.offer-removed { text-decoration: line-through; opacity: .6; }
