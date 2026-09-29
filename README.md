@@ -30,7 +30,7 @@
 
 | Слой | Технологии |
 |---|---|
-| Backend | Python 3.14, FastAPI, SQLAlchemy 2.0 (async, asyncpg), Alembic, pydantic-settings, httpx |
+| Backend | Python 3.14, FastAPI, SQLAlchemy 2.0 (async, asyncpg), Alembic (psycopg2), pydantic-settings, httpx, jinja2 |
 | БД | PostgreSQL 16 |
 | Пакетный менеджер | uv |
 | Frontend | Jinja2 + vanilla JS + jQuery UI (autocomplete) + Tailwind CDN (без сборки и без отдельного контейнера) |
@@ -68,7 +68,6 @@
 
    ```bash
    make up
-
    ```
 
    При старте контейнера `entrypoint.sh` дожидается готовности PostgreSQL
@@ -103,7 +102,6 @@
 ## Структура проекта
 
 ```
-
 .
 ├── app
 │   ├── api
@@ -126,7 +124,10 @@
 │   │   ├── campaign_service.py  # Часть 1: создание кампании
 │   │   ├── flow_service.py      # Часть 2: fetch/push/cancel/мутации офферов
 │   │   ├── weight_service.py    # Математика весов (чистая функция)
-│   │   └── offer_service.py     # Поиск офферов для автокомплита
+│   │   ├── offer_service.py     # Поиск офферов для автокомплита
+│   │   ├── snapshots.py         # Построение снапшотов потоков
+│   │   ├── errors.py            # Доменные исключения
+│   │   └── keitaro_consts.py    # Константы API Keitaro
 │   ├── static                   # js/css фронта
 │   ├── templates                # Jinja2-шаблоны страниц
 │   └── main.py                  # Точка входа + обработчики ошибок
@@ -139,7 +140,6 @@
 ├── Makefile
 ├── alembic.ini
 └── pyproject.toml
-
 ```
 
 ---
@@ -198,7 +198,8 @@
 
 ### Константы Keitaro
 Имена схем/действий/фильтров вынесены в `app/services/keitaro_consts.py`.
-Проверить актуальные значения на вашем трекере можно dev-ручкой:
+Проверить актуальные значения на конкретном инстансе Keitaro можно dev-ручкой
+(используется только для отладки при адаптации под новый трекер):
 ```bash
 curl -s localhost:8000/api/v1/debug/references | jq
 ```
@@ -213,17 +214,7 @@ make test
 pytest tests/ -v
 ```
 
-Покрыта ключевая математика весов: равное распределение, остаток первому,
-пин/анпин, add/remove/bring back, валидации.
-
----
-
-## Заметки и ограничения
-- Frontend сознательно без сборки и без отдельного контейнера: Jinja2-шаблоны +
-  статика раздаются самим FastAPI, интерактив — vanilla JS + jQuery UI autocomplete.
-- Keitaro — источник истины для потоков; наша БД хранит локальное рабочее состояние,
-  снапшоты синков и историю офферов (для bring back).
-- Ошибки Keitaro API проксируются как `502` с текстом ошибки в `detail`.
+Покрыта ключевая математика весов: равное распределение, остаток первому и т.д.
 
 ---
 
@@ -273,6 +264,11 @@ pytest tests/ -v
 
 ### 4. Отсутствие retry-логики для Keitaro API
 
-Сетевые ошибки (таймауты, 502/503 от Keitaro) приводят к немедленному `502`
-пользователю. В production нужен exponential backoff + retry для идемпотентных
-операций (GET, PUT с детерминированным телом).
+### 5. Покрытие тестами
+
+Сейчас покрыта тестами только математика весов (`WeightService`) —
+самая критичная и независимая от инфраструктуры часть. Для production
+нужно добавить:
+- интеграционные тесты сервисов (с моками `KeitaroClient` через `pytest-mock`);
+- тесты эндпоинтов через `httpx.AsyncClient` + `TestClient`;
+- тесты репозиториев (с тестовой БД через `pytest-postgresql` или `testcontainers`).
